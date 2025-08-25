@@ -3,6 +3,7 @@ pipeline {
   environment {
     APP_DIR = 'iskolar'
   }
+
   stages {
     stage('Checkout') {
       steps {
@@ -92,6 +93,20 @@ pipeline {
                 exit /b 1
               )
             '''
+          }
+        }
+      }
+    }
+
+    stage('Create Docker Image') {
+      steps {
+        dir("${APP_DIR}") {
+          script {
+            if (isUnix()) {
+              sh 'docker build -t iskolar-app:latest .'
+            } else {
+              bat 'docker build -t iskolar-app:latest .'
+            }
           }
         }
       }
